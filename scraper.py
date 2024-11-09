@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import sqlite3
+import argparse
 
 class Scraper:
     def __init__(self, db_path="entries.db"):
@@ -55,10 +56,13 @@ class Scraper:
         self.db.close()
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Scrape listings from Tori.fi based on a keyword.")
+    parser.add_argument("keyword", type=str, help="Keyword to search for")
+    args = parser.parse_args()
+
     scraper = Scraper()
     try:
-        keyword = input("Enter a keyword to search: ")
-        scraper.scrape_page(keyword)
+        scraper.scrape_page(args.keyword)
     finally:
         scraper.close()
 
