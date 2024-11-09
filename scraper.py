@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import sqlite3
 import argparse
+import json
 
 class Scraper:
     def __init__(self, db_path="entries.db"):
@@ -26,7 +27,7 @@ class Scraper:
     def extract_entry(self, item):
         try:
             name = item.find('h2').get_text(strip=True)
-            price = item.find('div', class_='price').get_text(strip=True)
+            price = item.find('span').get_text(strip=True)
             img = item.find('img')['src']
             url = item.find('a')['href']
             return {"name": name, "price": price, "img": img, "url": url}
@@ -44,7 +45,6 @@ class Scraper:
 
         soup = BeautifulSoup(res.text, 'html.parser')
         entries = soup.select("section > div > article")
-        print(entries)
         
         for item in entries:
             entry = self.extract_entry(item)
